@@ -11,9 +11,11 @@ def epio(commandstring):
         commandstring,
         env['epioapp']))
 
+def collectstatic():
+    local("./manage.py collectstatic --noinput")
+
 def deploy():
-    """ An example deploy workflow """
-    local("./manage.py collectstatic")
+    collectstatic()
     epio('upload')
     epio('django syncdb')
     epio('django migrate')
