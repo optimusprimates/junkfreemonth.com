@@ -79,6 +79,10 @@ INSTALLED_APPS = (
 
     'epio_commands',
     'south',
+
+    # junkfreemonth-specific
+    'foods',
+    'opinions',
 )
 
 LOGGING = {
