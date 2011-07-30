@@ -4,6 +4,7 @@ import os
 from unipath import FSPath as Path
 
 PROJECT_DIR = Path(__file__).absolute().ancestor(2)
+SETTINGS_DIR = Path(__file__).absolute().ancestor(1)
 
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
@@ -36,13 +37,7 @@ STATICFILES_FINDERS = (
 #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
-SECRET_KEY_PATH = Path(__file__).absolute().ancestor(1).child('secret_key.txt')
-if not os.path.exists(SECRET_KEY_PATH):
-    from bundle_config import config
-    SECRET_KEY_PATH = Path(config['core']['data_directory']).absolute().child('secret_key.txt')
-    if not os.path.exists(SECRET_KEY_PATH):
-        with open(SECRET_KEY_PATH, 'wb') as f:
-            f.write(''.join(random.choice(string.letters) for i in xrange(50)))
+SECRET_KEY_PATH = SETTINGS_DIR.child('secret_SESSION_KEY')
 SECRET_KEY = open(SECRET_KEY_PATH, 'rb').read().strip()
 
 # List of callables that know how to import templates from various sources.
@@ -78,6 +73,7 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
 
     'epio_commands',
+    'social_auth',
     'south',
 
     # junkfreemonth-specific
@@ -102,3 +98,18 @@ LOGGING = {
         },
     }
 }
+
+AUTHENTICATION_BACKENDS = (
+    'social_auth.backends.facebook.FacebookBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+FACEBOOK_APP_ID = open(SETTINGS_DIR.child('secret_FACEBOOK_APP_ID'), 'rb').read().strip()
+FACEBOOK_API_SECRET = open(SETTINGS_DIR.child('secret_FACEBOOK_API_SECRET'), 'rb').read().strip()
+
+LOGIN_URL = '/login-form/',
+LOGIN_REDIRECT_URL = '/logged-in/'
+LOGIN_ERROR_URL = '/login-error/'
+
+#SOCIAL_AUTH_COMPLETE_URL_NAME  = 'complete'
+#SOCIAL_AUTH_ASSOCIATE_URL_NAME = 'associate_complete'

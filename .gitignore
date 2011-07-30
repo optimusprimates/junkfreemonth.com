@@ -4,4 +4,4 @@
 *.un~
 *.db
 static_root/
-settings/secret_key.txt
+settings/secret_*
